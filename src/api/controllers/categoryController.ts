@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from 'express';
-import {getAllCategories} from '../models/categoryModel';
+import {getAllCategories, getCategoryById} from '../models/categoryModel';
 
 const categoryListGet = async (
   req: Request,
@@ -14,4 +14,17 @@ const categoryListGet = async (
   }
 };
 
-export {categoryListGet};
+const categoryGet = async (
+  req: Request<{id: number}, {}, {}>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const category = await getCategoryById(req.params.id);
+    res.json(category);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {categoryListGet, categoryGet};
