@@ -1,5 +1,9 @@
 import promisePool from '../../database/db';
-import {Category, GetCategory} from '../../interfaces/Category';
+import {Category} from '../../interfaces/Category';
+import {RowDataPacket} from 'mysql2';
+
+interface GetCategory extends RowDataPacket, Category {}
+
 
 const getAllCategories = async () => {
   const [rows] = await promisePool.execute<GetCategory[]>(

@@ -5,6 +5,4 @@ interface Category {
   category_name: string;
 }
 
-interface GetCategory extends RowDataPacket, Category {}
-
-export {Category, GetCategory};
+export {Category};
