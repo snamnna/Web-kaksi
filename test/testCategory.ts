@@ -1,7 +1,7 @@
 /* eslint-disable node/no-unpublished-import */
 import request from 'supertest';
-import Category from '../src/interfaces/Category';
-import MessageResponse from '../src/interfaces/MessageResponse';
+import {Category} from '../src/types/DBTypes';
+import {MessageResponse} from '../src/types/MessageTypes';
 
 // functios to test succesful cateory routes
 const getApiRoot = (url: string | Function): Promise<MessageResponse> => {

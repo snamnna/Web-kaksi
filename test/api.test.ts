@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 import {getApiRoot, getCategories} from './testCategory';
-import Category from '../src/interfaces/Category';
+import {Category} from '../src/types/DBTypes';
 
 // import app from '../src/app';
 const app = 'http://localhost:3000';
