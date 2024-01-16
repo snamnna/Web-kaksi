@@ -1,4 +1,4 @@
-import {Response, Send} from 'express';
+import {Response} from 'express';
 
 type MessageResponse = {
   message: string;
