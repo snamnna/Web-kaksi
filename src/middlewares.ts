@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from 'express';
 
 import CustomError from './classes/CustomError';
-import {ErrorResponse, TypedResponse} from './types/MessageTypes';
+import {ErrorResponse} from './types/MessageTypes';
 
 const notFound = (req: Request, _res: Response, next: NextFunction) => {
   const error = new CustomError(`🔍 - Not Found - ${req.originalUrl}`, 404);
@@ -11,7 +11,7 @@ const notFound = (req: Request, _res: Response, next: NextFunction) => {
 const errorHandler = (
   err: CustomError,
   _req: Request,
-  res: TypedResponse<ErrorResponse>,
+  res: Response<ErrorResponse>,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) => {
