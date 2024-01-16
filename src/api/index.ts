@@ -10,6 +10,6 @@ router.get('/', (req: Request, res: Response) => {
   });
 });
 
-router.use('/category', categoryRoute);
+router.use('/categories', categoryRoute);
 
 export default router;
