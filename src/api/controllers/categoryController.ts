@@ -1,9 +1,11 @@
 import {Request, Response, NextFunction} from 'express';
 import {getAllCategories, getCategoryById} from '../models/categoryModel';
+import {Category} from '../../types/DBTypes';
+import {TypedResponse} from '../../types/MessageTypes';
 
 const categoryListGet = async (
   req: Request,
-  res: Response,
+  res: TypedResponse<Category[]>,
   next: NextFunction
 ) => {
   try {
@@ -15,12 +17,13 @@ const categoryListGet = async (
 };
 
 const categoryGet = async (
-  req: Request<{id: number}, {}, {}>,
-  res: Response,
+  req: Request<{id: string}, {}, {}>,
+  res: TypedResponse<Category>,
   next: NextFunction
 ) => {
   try {
-    const category = await getCategoryById(req.params.id);
+    const id = Number(req.params.id);
+    const category = await getCategoryById(id);
     res.json(category);
   } catch (error) {
     next(error);

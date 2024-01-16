@@ -1,12 +1,9 @@
 import promisePool from '../../database/db';
-import {Category} from '../../interfaces/Category';
+import {Category} from '../../types/DBTypes';
 import {RowDataPacket} from 'mysql2';
 
-interface GetCategory extends RowDataPacket, Category {}
-
-
 const getAllCategories = async () => {
-  const [rows] = await promisePool.execute<GetCategory[]>(
+  const [rows] = await promisePool.execute<RowDataPacket[] & Category[]>(
     'SELECT * FROM categories'
   );
   if (!rows) {
@@ -16,7 +13,7 @@ const getAllCategories = async () => {
 };
 
 const getCategoryById = async (id: number) => {
-  const [rows] = await promisePool.execute<GetCategory[]>(
+  const [rows] = await promisePool.execute<RowDataPacket[] & Category[]>(
     'SELECT * FROM categories WHERE category_id = ?',
     [id]
   );

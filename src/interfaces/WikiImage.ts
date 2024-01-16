@@ -1,1 +1,0 @@
-// interface for WikiImage
