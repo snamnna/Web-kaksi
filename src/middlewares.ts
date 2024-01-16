@@ -1,8 +1,7 @@
 import {NextFunction, Request, Response} from 'express';
 
-import ErrorResponse from './interfaces/ErrorResponse';
 import CustomError from './classes/CustomError';
-import {TypedResponse} from './types/MessageTypes';
+import {ErrorResponse, TypedResponse} from './types/MessageTypes';
 
 const notFound = (req: Request, _res: Response, next: NextFunction) => {
   const error = new CustomError(`🔍 - Not Found - ${req.originalUrl}`, 404);
