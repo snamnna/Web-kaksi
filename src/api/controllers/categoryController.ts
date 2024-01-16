@@ -1,4 +1,4 @@
-import {Request, Response, NextFunction} from 'express';
+import {Request, NextFunction} from 'express';
 import {getAllCategories, getCategoryById} from '../models/categoryModel';
 import {Category} from '../../types/DBTypes';
 import {TypedResponse} from '../../types/MessageTypes';
