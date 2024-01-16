@@ -1,11 +1,11 @@
-import express, {Request} from 'express';
+import express from 'express';
 
 import categoryRoute from './routes/categoryRoute';
-import {MessageResponse, TypedResponse} from '../types/MessageTypes';
+import {MessageResponse} from '../types/MessageTypes';
 
 const router = express.Router();
 
-router.get('/', (_req: Request, res: TypedResponse<MessageResponse>) => {
+router.get<{}, MessageResponse>('/', (_req, res) => {
   res.json({
     message: 'animals api v1',
   });
