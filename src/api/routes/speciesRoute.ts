@@ -13,4 +13,8 @@ router.route('/').get(speciesListGet).post(speciesPost);
 
 router.route('/:id').get(speciesGet).put(speciesPut).delete(speciesDelete);
 
+router.get('/test', (req, res) => {
+  res.send('Test route works!');
+});
+
 export default router;

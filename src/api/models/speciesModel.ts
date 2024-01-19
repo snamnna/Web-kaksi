@@ -8,6 +8,7 @@ const getAllSpecies = async (): Promise<Species[]> => {
   const [rows] = await promisePool.execute<RowDataPacket[] & Species[]>(
     'SELECT * FROM species'
   );
+
   if (!rows) {
     throw new CustomError('No species found', 404); //Type guard
   }
@@ -16,7 +17,7 @@ const getAllSpecies = async (): Promise<Species[]> => {
 
 const getSpeciesById = async (id: number): Promise<Species> => {
   const [rows] = await promisePool.execute<RowDataPacket[] & Species[]>(
-    'SELECT * FROM species WHERE species_id = ?',
+    'SELECT * FROM species WHERE id = ?',
     [id]
   );
   if (!rows) {

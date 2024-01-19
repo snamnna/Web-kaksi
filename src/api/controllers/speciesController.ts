@@ -29,6 +29,7 @@ const speciesListGet = async (
   res: Response<Species[]>,
   next: NextFunction
 ) => {
+  console.log('Handling GET request for /api/v1/species');
   try {
     const speciesList = await getAllSpecies();
     res.json(speciesList);
