@@ -1,6 +1,13 @@
 import {Request, Response, NextFunction} from 'express';
-import {getAllCategories, getCategoryById} from '../models/categoryModel';
+import {
+  addCategory,
+  deleteCategory,
+  getAllCategories,
+  getCategoryById,
+  updateCategory,
+} from '../models/categoryModel';
 import {Category} from '../../types/DBTypes';
+import {MessageResponse, PostMessage} from '../../types/MessageTypes';
 
 const categoryListGet = async (
   req: Request,
@@ -29,4 +36,60 @@ const categoryGet = async (
   }
 };
 
-export {categoryListGet, categoryGet};
+const categoryPost = async (
+  req: Request<{}, {}, Pick<Category, 'category_name'>>,
+  res: Response<PostMessage>,
+  next: NextFunction
+) => {
+  try {
+    const categoryId = await addCategory(req.body);
+    res.send({
+      message: 'Category added',
+      id: categoryId,
+    });
+  } catch (error) {
+    next(error); //Lähetetään virhettä eteenpäin middleware ketjussa
+  }
+};
+
+const categoryPut = async (
+  req: Request<{id: string}, {}, Pick<Category, 'category_name'>>,
+  res: Response<MessageResponse>,
+  next: NextFunction
+) => {
+  try {
+    const id = Number(req.params.id);
+    await updateCategory(id, req.body);
+
+    res.send({
+      message: 'Category updated',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const categoryDelete = async (
+  req: Request<{id: string}>,
+  res: Response<MessageResponse>,
+  next: NextFunction
+) => {
+  try {
+    const id = Number(req.params.id);
+    await deleteCategory(id);
+
+    res.send({
+      message: 'Category deleted',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {
+  categoryListGet,
+  categoryGet,
+  categoryPost,
+  categoryPut,
+  categoryDelete,
+};
