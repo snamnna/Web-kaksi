@@ -39,7 +39,7 @@ const speciesListGet = async (
 
 const speciesPost = async (
   req: Request<{}, {}, Pick<Species, 'species_name'>>,
-  res: Response<{message: string; id: number}>,
+  res: Response<PostMessage>,
   next: NextFunction
 ) => {
   try {
@@ -55,7 +55,7 @@ const speciesPost = async (
 
 const speciesPut = async (
   req: Request<{id: string}, {}, Pick<Species, 'species_name'>>,
-  res: Response<{message: string}>,
+  res: Response<MessageResponse>,
   next: NextFunction
 ) => {
   try {
@@ -71,7 +71,7 @@ const speciesPut = async (
 
 const speciesDelete = async (
   req: Request<{id: string}>,
-  res: Response<{message: string}>,
+  res: Response<MessageResponse>,
   next: NextFunction
 ) => {
   try {
