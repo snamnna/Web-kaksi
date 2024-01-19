@@ -7,9 +7,9 @@ const getAllCategories = async () => {
     'SELECT * FROM categories'
   );
   if (!rows) {
-    throw new Error('No categories found');
+    throw new Error('No categories found'); //Type guard
   }
-  return rows as Category[];
+  return rows;
 };
 
 const getCategoryById = async (id: number) => {
@@ -20,7 +20,7 @@ const getCategoryById = async (id: number) => {
   if (!rows) {
     throw new Error('No categories found');
   }
-  return rows[0] as Category;
+  return rows[0];
 };
 
 export {getAllCategories, getCategoryById};
