@@ -9,4 +9,10 @@ type Animal = {
   birthdate: Date;
 };
 
-export {Category, Animal};
+type Species = {
+  species_id: number;
+  species_name: string;
+  category: number;
+};
+
+export {Category, Animal, Species};
