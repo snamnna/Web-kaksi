@@ -10,6 +10,7 @@ import {Animal, FullAnimal} from '../../types/DBTypes';
 import {MessageResponse, PostMessage} from '../../types/MessageTypes';
 import {validationResult} from 'express-validator';
 import CustomError from '../../classes/CustomError';
+import {validationErrors} from '../../middlewares';
 
 const animalListGet = async (
   req: Request,
@@ -43,17 +44,7 @@ const animalPost = async (
   res: Response<PostMessage>,
   next: NextFunction
 ) => {
-  const errors = validationResult(req); //Tästä voisi tehdä middlewaren
-  if (!errors.isEmpty()) {
-    const messages: string = errors
-      .array()
-      .map((error) => {
-        return `${error.msg} in ${error.param}`;
-      })
-      .join(', ');
-    next(new CustomError(messages, 400)); //Next ei pysäytä funktiota
-    return;
-  }
+  validationErrors(req, res, next);
   try {
     const animalId = await addAnimal(req.body);
     res.send({
