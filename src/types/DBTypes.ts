@@ -16,4 +16,12 @@ type Species = {
   image: string;
 };
 
-export {Category, Animal, Species};
+type FullSpecies = Omit<Species, 'category'> & {
+  category: Category;
+};
+
+type FullAnimal = Omit<Animal, 'species'> & {
+  species: FullSpecies;
+};
+
+export {Category, Animal, Species, FullSpecies, FullAnimal};

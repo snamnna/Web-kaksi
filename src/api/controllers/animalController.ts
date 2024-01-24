@@ -6,12 +6,14 @@ import {
   getAnimalById,
   updateAnimal,
 } from '../models/animalModel';
-import {Animal} from '../../types/DBTypes';
+import {Animal, FullAnimal} from '../../types/DBTypes';
 import {MessageResponse, PostMessage} from '../../types/MessageTypes';
+import {validationResult} from 'express-validator';
+import CustomError from '../../classes/CustomError';
 
 const animalListGet = async (
   req: Request,
-  res: Response<Animal[]>,
+  res: Response<FullAnimal[]>,
   next: NextFunction
 ) => {
   try {
@@ -24,7 +26,7 @@ const animalListGet = async (
 
 const animalGet = async (
   req: Request<{id: string}, {}, {}>,
-  res: Response<Animal>,
+  res: Response<FullAnimal>,
   next: NextFunction
 ) => {
   try {
@@ -37,10 +39,21 @@ const animalGet = async (
 };
 
 const animalPost = async (
-  req: Request<{}, {}, Pick<Animal, 'animal_name'>>,
+  req: Request<{}, {}, Omit<Animal, 'animal_id'>>,
   res: Response<PostMessage>,
   next: NextFunction
 ) => {
+  const errors = validationResult(req); //Tästä voisi tehdä middlewaren
+  if (!errors.isEmpty()) {
+    const messages: string = errors
+      .array()
+      .map((error) => {
+        return `${error.msg} in ${error.param}`;
+      })
+      .join(', ');
+    next(new CustomError(messages, 400)); //Next ei pysäytä funktiota
+    return;
+  }
   try {
     const animalId = await addAnimal(req.body);
     res.send({
@@ -53,7 +66,7 @@ const animalPost = async (
 };
 
 const animalPut = async (
-  req: Request<{id: string}, {}, Pick<Animal, 'animal_name'>>,
+  req: Request<{id: string}, {}, Omit<Animal, 'animal_id'>>,
   res: Response<MessageResponse>,
   next: NextFunction
 ) => {

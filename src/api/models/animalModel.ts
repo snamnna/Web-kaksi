@@ -1,26 +1,51 @@
 import CustomError from '../../classes/CustomError';
 import promisePool from '../../database/db';
-import {Animal} from '../../types/DBTypes';
+import {Animal, FullAnimal} from '../../types/DBTypes';
 import {ResultSetHeader, RowDataPacket} from 'mysql2';
+import {speciesDelete} from '../controllers/speciesController';
 
-const getAllAnimals = async (): Promise<Animal[]> => {
-  const [rows] = await promisePool.execute<RowDataPacket[] & Animal[]>(
-    'SELECT * FROM animals'
+const getAllAnimals = async (): Promise<FullAnimal[]> => {
+  const [rows] = await promisePool.execute<RowDataPacket[] & FullAnimal[]>(
+    `SELECT animal_id, animal_name, birthdate,
+    JSON_OBJECT(
+      'species_id', species.species_id, 'species_name', species.species_name, 'image', species.image,
+      'categegory', JSON_OBJECT('category_id', categories.category_id, 'category_name', categories.category_name)
+    )
+    AS species
+    FROM animals
+    JOIN species ON animals.species = species.species_id
+    JOIN categories ON species.category = categories.category_id
+    ;`
   );
   if (!rows) {
     throw new CustomError('No animals found', 404); //Type guard
   }
+  rows.forEach((animal: FullAnimal) => {
+    animal.species = JSON.parse(animal.species as unknown as string);
+  });
   return rows;
 };
 
-const getAnimalById = async (id: number): Promise<Animal> => {
-  const [rows] = await promisePool.execute<RowDataPacket[] & Animal[]>(
-    'SELECT * FROM animals WHERE animal_id = ?',
+const getAnimalById = async (id: number): Promise<FullAnimal> => {
+  const [rows] = await promisePool.execute<RowDataPacket[] & FullAnimal[]>(
+    `SELECT animal_id, animal_name, birthdate,
+    JSON_OBJECT(
+      'species_id', species.species_id, 'species_name', species.species_name, 'image', species.image,
+      'categegory', JSON_OBJECT('category_id', categories.category_id, 'category_name', categories.category_name)
+    )
+    AS species
+    FROM animals
+    JOIN species ON animals.species = species.species_id
+    JOIN categories ON species.category = categories.category_id
+    WHERE animal_id = ?;`,
     [id]
   );
   if (!rows) {
     throw new CustomError('No animals found', 404);
   }
+  rows.forEach((animal: FullAnimal) => {
+    animal.species = JSON.parse(animal.species as unknown as string);
+  });
   return rows[0];
 };
 
@@ -39,12 +64,13 @@ const addAnimal = async (
 
 const updateAnimal = async (
   id: number,
-  animal: Pick<Animal, 'animal_name'>
+  animal: Omit<Animal, 'animal_id'>
 ): Promise<boolean> => {
-  const [headers] = await promisePool.execute<ResultSetHeader>(
-    'UPDATE animals SET animal_name = ?, species_id = ?, category_id = ? WHERE animal_id = ?',
-    [animal.animal_name, id]
-  );
+  const sql = promisePool.format('UPDATE animals SET ? WHERE animal_id = ?', [
+    animal,
+    id,
+  ]);
+  const [headers] = await promisePool.execute<ResultSetHeader>(sql);
   if (headers.affectedRows === 0) {
     throw new CustomError('Animal not updated', 304);
   }

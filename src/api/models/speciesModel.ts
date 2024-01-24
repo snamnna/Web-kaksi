@@ -43,10 +43,11 @@ const updateSpecies = async (
   id: number,
   species: Pick<Species, 'species_name'>
 ): Promise<boolean> => {
-  const [headers] = await promisePool.execute<ResultSetHeader>(
-    'UPDATE species SET species_name = ? WHERE species_id = ?',
-    [species.species_name, id]
-  );
+  const sql = promisePool.format('UPDATE species SET ? WHERE species_id = ?;', [
+    species,
+    id,
+  ]);
+  const [headers] = await promisePool.execute<ResultSetHeader>(sql);
   if (headers.affectedRows === 0) {
     throw new CustomError('Species not updated', 304);
   }
