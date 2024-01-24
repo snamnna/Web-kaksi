@@ -64,9 +64,9 @@ const addAnimal = async (
 
 const updateAnimal = async (
   id: number,
-  animal: Omit<Animal, 'animal_id'>
+  animal: Pick<Animal, 'animal_name'>
 ): Promise<boolean> => {
-  const sql = promisePool.format('UPDATE animals SET ? WHERE animal_id = ?', [
+  const sql = promisePool.format('UPDATE animals SET ? WHERE animal_id = ?;', [
     animal,
     id,
   ]);

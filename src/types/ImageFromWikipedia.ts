@@ -1,31 +1,20 @@
-type Image = {
-  ns: number;
-  title: string;
-};
-
-type Page = {
-  pageid: number;
-  ns: number;
-  title: string;
-  images: Image[];
-};
-
-type Pages = {
-  [key: string]: Page;
-};
-
-type Query = {
-  pages: Pages;
-};
-
-type Continue = {
-  imcontinue: string;
-  continue: string;
-};
-
 type ImageFromWikipedia = {
-  continue: Continue;
-  query: Query;
+  batchcomplete: string;
+  query: {
+    pages: {
+      [key: string]: {
+        pageid: number;
+        ns: number;
+        title: string;
+        thumbnail: {
+          source: string;
+          width: number;
+          height: number;
+        };
+        pageimage: string;
+      };
+    };
+  };
 };
 
 export {ImageFromWikipedia};

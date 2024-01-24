@@ -40,11 +40,10 @@ const animalGet = async (
 };
 
 const animalPost = async (
-  req: Request<{}, {}, Omit<Animal, 'animal_id'>>,
+  req: Request<{}, {}, Pick<Animal, 'animal_name'>>,
   res: Response<PostMessage>,
   next: NextFunction
 ) => {
-  validationErrors(req, res, next);
   try {
     const animalId = await addAnimal(req.body);
     res.send({
@@ -52,12 +51,12 @@ const animalPost = async (
       id: animalId,
     });
   } catch (error) {
-    next(error); //Lähetetään virhettä eteenpäin middleware ketjussa
+    next(error);
   }
 };
 
 const animalPut = async (
-  req: Request<{id: string}, {}, Omit<Animal, 'animal_id'>>,
+  req: Request<{id: string}, {}, Pick<Animal, 'animal_name'>>,
   res: Response<MessageResponse>,
   next: NextFunction
 ) => {
